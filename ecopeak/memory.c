@@ -1,9 +1,5 @@
 #include "memory.h"
 
-/* TODO: Fix <pthread.h> errors */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
-
 struct ecopeak_memory_block {
     uint8_t mem[65536];
 };
@@ -130,5 +126,3 @@ void ecopeak_cleanup_memory() {
         if (ecopeak_memory[i])
             free(ecopeak_memory[i]);
 }
-
-#pragma GCC diagnostic pop

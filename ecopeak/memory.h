@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-/* TODO: Fix <pthread.h> errors */
-/* #include <pthread.h> */
+#include <pthread.h>
 #include <sched.h>
 #include <semaphore.h>
 #include <string.h>

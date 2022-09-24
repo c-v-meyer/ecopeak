@@ -1,7 +1,6 @@
 #ifndef ECOPEAK_MEMORY_H
 #define ECOPEAK_MEMORY_H
 
-#include <bits/pthreadtypes.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>

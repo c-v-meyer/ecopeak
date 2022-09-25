@@ -48,7 +48,7 @@ int ecopeak_destroy_thread(ecopeak_thread* thread) {
 
 int ecopeak_create_thread(ecopeak_thread* thread, void* (*thread_func)(void*), enum ecopeak_thread_priority thread_priority) {
 	thread->hThread = CreateThread(NULL, 0, thread_func, NULL, 0, &thread->dwThreadId);
-	if (ECOPEAK_EXPECT(!*sem, 1)) {
+	if (ECOPEAK_EXPECT(!thread->hThread, 0)) {
 		int nPriority;
 		switch (thread_priority) {
 		case ECOPEAK_ULTRA_LOW_THREAD_PRIORITY:
@@ -83,7 +83,7 @@ int ecopeak_create_thread(ecopeak_thread* thread, void* (*thread_func)(void*), e
 }
 
 int ecopeak_join_thread(ecopeak_thread* thread) {
-	return WaitForSingleObject(thread->hThread) == 0xFFFFFFFF ? 1 : 0;
+	return WaitForSingleObject(thread->hThread, INFINITE) == 0xFFFFFFFF ? 1 : 0;
 }
 
 int ecopeak_destroy_thread(ecopeak_thread* thread) {

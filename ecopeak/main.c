@@ -3,13 +3,21 @@
 #include <stdbool.h>
 #include <time.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <semaphore.h>
 #include "opcode.h"
 #include "preprocess.h"
 #include "read_bin.h"
 #include "memory.h"
 #include "cpu.h"
+
+#include "cpu.c"
+#include "memory.c"
+#include "mmu.c"
+#include "mutex.c"
+#include "opcode.c"
+#include "preprocess.c"
+#include "read_bin.c"
+#include "semaphore.c"
+#include "thread.c"
 
 int main(void) {
     if (ecopeak_init_memory())

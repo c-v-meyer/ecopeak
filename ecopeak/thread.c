@@ -12,26 +12,24 @@ int ecopeak_create_thread(ecopeak_thread* thread, ecopeak_thread_return_type (*t
 
 	thread->normal_priority = false;
 	if (ECOPEAK_EXPECT(pthread_attr_init(&thread->thread_attr), 0))
-		goto cancel_routine_1;
+		goto cancel_routine;
 	struct sched_param param;
-	if (ECOPEAK_EXPECT(pthread_attr_getschedparam(&thread->thread_attr), 0))
-		goto cancel_routine_1;
+	if (ECOPEAK_EXPECT(pthread_attr_getschedparam(&thread->thread_attr, &param), 0))
+		goto cancel_routine;
 	param.sched_priority = sched_get_priority_max(SCHED_FIFO) / 6 * (uint32_t) thread_priority;
 	if (ECOPEAK_EXPECT(pthread_attr_setschedparam(&thread->thread_attr, &param), 0))
-		goto cancel_routine_1;
+		goto cancel_routine;
 
 	if (ECOPEAK_EXPECT(pthread_create(&thread->thread, &thread->thread_attr, thread_func, NULL), 0))
-		goto cancel_routine_2;
+		goto cancel_routine;
 
-    cancel_routine_2:
-	pthread_destroy(&thread->thread);
-    cancel_routine_1:
+    cancel_routine:
 	pthread_attr_destroy(&thread->thread_attr);
 	return 1;
 }
 
 int ecopeak_join_thread(ecopeak_thread* thread) {
-	return pthread_join(ecopeak_thread->thread, NULL) ? 1 : 0;
+	return pthread_join(thread->thread, NULL) ? 1 : 0;
 }
 
 int ecopeak_destroy_thread(ecopeak_thread* thread) {

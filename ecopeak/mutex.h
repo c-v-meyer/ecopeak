@@ -1,6 +1,7 @@
 #ifndef ECOPEAK_MUTEX_H
 #define ECOPEAK_MUTEX_H
 
+#include "expect.h"
 #include "platform.h"
 #if defined(ECOPEAK_PLATFORM_UNIX_LIKE)
 

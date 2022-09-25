@@ -5,19 +5,23 @@
 
 
 int ecopeak_init_semaphore(ecopeak_semaphore* sem, int val) {
-	return sem_init(sem, 0, val) ? 1 : 0;
+	if (ECOPEAK_EXPECT(sem_init(sem, 0, val), 0)) {
+		ecopeak_destroy_semaphore(sem);
+		return 1;
+	}
+	return 0;
 }
 
 int ecopeak_post_semaphore(ecopeak_semaphore* sem) {
-	return sem_post(sem) ? 1 : 0;
+	return ECOPEAK_EXPECT(sem_post(sem), 0) ? 1 : 0;
 }
 
 int ecopeak_wait_semaphore(ecopeak_semaphore* sem) {
-	return sem_wait(sem) ? 1 : 0;
+	return ECOPEAK_EXPECT(sem_wait(sem), 0) ? 1 : 0;
 }
 
 int ecopeak_destroy_semaphore(ecopeak_semaphore* sem) {
-	return sem_destroy(sem) ? 1 : 0;
+	return ECOPEAK_EXPECT(sem_destroy(sem), 0) ? 1 : 0;
 }
 
 
@@ -32,7 +36,10 @@ int ecopeak_init_semaphore(ecopeak_semaphore* sem, int val) {
 		val,
 		0xFFFFFFFF,
 		NULL);
-	return *sem ? 0 : 1;
+	if (ECOPEAK_EXPECT(!*sem, 0))
+		return 0;
+	ecopeak_destroy_semaphore(sem);
+	return 1;
 }
 
 int ecopeak_post_semaphore(ecopeak_semaphore* sem) {

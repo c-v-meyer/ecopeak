@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <pthread.h>
-#include <sched.h>
+#include "thread.h"
 #include "semaphore.h"
 #include "mutex.h"
 #include <string.h>

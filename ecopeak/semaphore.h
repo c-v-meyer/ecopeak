@@ -1,6 +1,7 @@
 #ifndef ECOPEAK_SEMAPHORE_H
 #define ECOPEAK_SEMAPHORE_H
 
+#include "expect.h"
 #include "platform.h"
 #if defined(ECOPEAK_PLATFORM_UNIX_LIKE)
 
@@ -39,7 +40,7 @@ typedef HANDLE ecopeak_semaphore;
  * \attr val Initial value
  * \returns Status code (0=OK, 1=ERROR)
  */
-int ecopeak_init_semaphore(ecopeak_semaphore*, _In_ int);
+int ecopeak_init_semaphore(ecopeak_semaphore*, int);
 
 /*!
  * \brief Increments a semaphore

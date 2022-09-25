@@ -59,6 +59,6 @@ int ecopeak_wait_semaphore(ecopeak_semaphore*);
  * \attr sem Pointer to the semaphore to be destroyed
  * \returns Status code (0=OK, 1=ERROR)
  */
-int ecopeak_wait_semaphore(ecopeak_semaphore*);
+int ecopeak_destroy_semaphore(ecopeak_semaphore*);
 
 #endif

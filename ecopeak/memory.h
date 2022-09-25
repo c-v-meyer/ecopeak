@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <sched.h>
-#include <semaphore.h>
+#include "semaphore.h"
 #include <string.h>
 
 /*!

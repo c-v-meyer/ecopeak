@@ -15,6 +15,7 @@ typedef sem_t ecopeak_semaphore;
 
 
 
+
 #elif defined(ECOPEAK_PLATFORM_WINDOWS)
 
 
@@ -38,27 +39,27 @@ typedef HANDLE ecopeak_semaphore;
  * \attr val Initial value
  * \returns Status code (0=OK, 1=ERROR)
  */
-_Success_(return == 0) int ecopeak_init_semaphore(_Outptr_ ecopeak_semaphore*, _In_ int);
+int ecopeak_init_semaphore(ecopeak_semaphore*, _In_ int);
 
 /*!
  * \brief Increments a semaphore
  * \attr sem Pointer to the semaphore to be incremented
  * \returns Status code (0=OK, 1=ERROR)
  */
-_Success_(return == 0) int ecopeak_post_semaphore(_In_ ecopeak_semaphore*);
+int ecopeak_post_semaphore(ecopeak_semaphore*);
 
 /*!
  * \brief Decrements a semaphore
  * \attr sem Pointer to the semaphore to be decremented
  * \returns Status code (0=OK, 1=ERROR)
  */
-_Success_(return == 0) int ecopeak_wait_semaphore(_In_ ecopeak_semaphore*);
+int ecopeak_wait_semaphore(ecopeak_semaphore*);
 
 /*!
  * \brief Destroys a semaphore
  * \attr sem Pointer to the semaphore to be destroyed
  * \returns Status code (0=OK, 1=ERROR)
  */
-_Success_(return == 0) int ecopeak_destroy_semaphore(_In_ ecopeak_semaphore*);
+int ecopeak_destroy_semaphore(ecopeak_semaphore*);
 
 #endif

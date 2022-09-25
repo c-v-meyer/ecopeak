@@ -26,7 +26,7 @@ int ecopeak_destroy_semaphore(ecopeak_semaphore* sem) {
 
 
 
-_Success_(return == 0) int ecopeak_init_semaphore(_Outptr_ ecopeak_semaphore* sem, _In_ int val) {
+int ecopeak_init_semaphore(ecopeak_semaphore* sem, int val) {
 	*sem = CreateSemaphore(
 		NULL,
 		val,
@@ -35,15 +35,15 @@ _Success_(return == 0) int ecopeak_init_semaphore(_Outptr_ ecopeak_semaphore* se
 	return *sem ? 0 : 1;
 }
 
-_Success_(return == 0) int ecopeak_post_semaphore(_In_ ecopeak_semaphore* sem) {
+int ecopeak_post_semaphore(ecopeak_semaphore* sem) {
 	return ReleaseSemaphore(*sem, 1, NULL) ? 0 : 1;
 }
 
-_Success_(return == 0) int ecopeak_wait_semaphore(_In_ ecopeak_semaphore* sem) {
+int ecopeak_wait_semaphore(ecopeak_semaphore* sem) {
 	return WaitForSingleObject(*sem, INFINITE) == 0xFFFFFFFF ? 1 : 0;
 }
 
-_Success_(return == 0) int ecopeak_destroy_semaphore(_In_ ecopeak_semaphore* sem) {
+int ecopeak_destroy_semaphore(ecopeak_semaphore* sem) {
 	return CloseHandle(*sem) ? 1 : 0;
 }
 

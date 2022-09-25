@@ -9,7 +9,7 @@
 
 #include <pthread.h>
 #include <sched.h>
-#include <bool.h>
+#include <stdbool.h>
 
 /*!
  * \brief Platform independent thread

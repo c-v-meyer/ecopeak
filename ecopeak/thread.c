@@ -4,7 +4,7 @@
 
 
 
-int ecopeak_create_thread(ecopeak_thread* thread, void* (*thread_func)(void*), enum ecopeak_thread_priority thread_priority) {
+int ecopeak_create_thread(ecopeak_thread* thread, ecopeak_thread_return_type (*thread_func)(void*), enum ecopeak_thread_priority thread_priority) {
 	if (thread_priority == ECOPEAK_NORMAL_THREAD_PRIORITY) {
 		thread->normal_priority = true;
 		return pthread_create(&thread->thread, NULL, thread_func, NULL) ? 1 : 0;
@@ -46,7 +46,7 @@ int ecopeak_destroy_thread(ecopeak_thread* thread) {
 
 
 
-int ecopeak_create_thread(ecopeak_thread* thread, void* (*thread_func)(void*), enum ecopeak_thread_priority thread_priority) {
+int ecopeak_create_thread(ecopeak_thread* thread, ecopeak_thread_return_type (*thread_func)(void*), enum ecopeak_thread_priority thread_priority) {
 	thread->hThread = CreateThread(NULL, 0, thread_func, NULL, 0, &thread->dwThreadId);
 	if (ECOPEAK_EXPECT(!thread->hThread, 0)) {
 		int nPriority;

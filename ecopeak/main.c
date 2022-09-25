@@ -9,16 +9,6 @@
 #include "memory.h"
 #include "cpu.h"
 
-#include "cpu.c"
-#include "memory.c"
-#include "mmu.c"
-#include "mutex.c"
-#include "opcode.c"
-#include "preprocess.c"
-#include "read_bin.c"
-#include "semaphore.c"
-#include "thread.c"
-
 int main(void) {
     if (ecopeak_init_memory())
         return 1;

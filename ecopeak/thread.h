@@ -20,6 +20,13 @@ typedef struct {
 	bool normal_priority;
 } ecopeak_thread;
 
+/*!
+ * \brief Thread function return type
+ */
+typedef void* ecopeak_thread_return_type;
+
+#define ECOPEAK_THREAD_RETURN_OK NULL
+
 
 
 #elif defined(ECOPEAK_PLATFORM_WINDOWS)
@@ -34,6 +41,13 @@ typedef struct {
 	HANDLE hThread;
 	DWORD dwThreadId;
 } ecopeak_thread;
+
+/*!
+ * \brief Thread function return type
+ */
+typedef DWORD ecopeak_thread_return_type;
+
+#define ECOPEAK_THREAD_RETURN_OK 0
 
 
 
@@ -61,7 +75,7 @@ enum ecopeak_thread_priority {
  * \arg thread_priority Priority of the thread
  * \returns Status code (0=OK, 1=ERROR)
  */
-int ecopeak_create_thread(ecopeak_thread*, void* (*)(void*), enum ecopeak_thread_priority);
+int ecopeak_create_thread(ecopeak_thread*, ecopeak_thread_return_type (*)(void*), enum ecopeak_thread_priority);
 
 /*!
  * \brief Joins a separate thread with the thread of the callee

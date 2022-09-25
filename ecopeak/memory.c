@@ -44,7 +44,7 @@ static bool ecopeak_prealloc_memory_thread_break = false;
  * \param arg Unused
  * \returns NULL
  */
-static void* ecopeak_prealloc_memory_thread(void* arg) {
+static ecopeak_thread_return_type ecopeak_prealloc_memory_thread(void* arg) {
     while (true) {
         ecopeak_lock_mutex(&ecopeak_prealloc_memory_thread_lock);
         ecopeak_post_semaphore(&ecopeak_prealloc_memory_thread_continued);
@@ -55,7 +55,7 @@ static void* ecopeak_prealloc_memory_thread(void* arg) {
         ecopeak_unlock_mutex(&ecopeak_prealloc_memory_thread_lock);
         ecopeak_wait_semaphore(&ecopeak_prealloc_memory_thread_continue);
     }
-    return NULL;
+    return ECOPEAK_THREAD_RETURN_OK;
 }
 
 int ecopeak_init_memory() {

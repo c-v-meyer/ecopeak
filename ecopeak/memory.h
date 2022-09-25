@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include "semaphore.h"
+#include "mutex.h"
 #include <string.h>
 
 /*!

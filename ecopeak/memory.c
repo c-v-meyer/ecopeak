@@ -37,7 +37,7 @@ static ecopeak_semaphore ecopeak_prealloc_memory_thread_continued;
 /*!
  * \brief Used to lock all shared variables between the main thread and the memory pre-allocation thread
  */
-static pthread_mutex_t ecopeak_prealloc_memory_thread_lock;
+static ecopeak_mutex ecopeak_prealloc_memory_thread_lock;
 
 /*!
  * \brief Used to trigger the termination of the memory pre-allocation thread
@@ -51,13 +51,13 @@ static bool ecopeak_prealloc_memory_thread_break = false;
  */
 static void* ecopeak_prealloc_memory_thread(void* arg) {
     while (true) {
-        pthread_mutex_lock(&ecopeak_prealloc_memory_thread_lock);
+        ecopeak_lock_mutex(&ecopeak_prealloc_memory_thread_lock);
         ecopeak_post_semaphore(&ecopeak_prealloc_memory_thread_continued);
         if (ecopeak_prealloc_memory_thread_break)
             break;
         posix_memalign((void**) &ecopeak_prealloc_memory_block, 16, sizeof(struct ecopeak_memory_block));
         memset(ecopeak_prealloc_memory_block, 0, sizeof(struct ecopeak_memory_block));
-        pthread_mutex_unlock(&ecopeak_prealloc_memory_thread_lock);
+        ecopeak_unlock_mutex(&ecopeak_prealloc_memory_thread_lock);
         ecopeak_wait_semaphore(&ecopeak_prealloc_memory_thread_continue);
     }
     return NULL;
@@ -76,12 +76,16 @@ int ecopeak_init_memory() {
         goto cancel_routine_2;
     if (__builtin_expect(ecopeak_init_semaphore(&ecopeak_prealloc_memory_thread_continued, 0), 0))
         goto cancel_routine_3;
+    if (__builtin_expect(ecopeak_init_mutex(&ecopeak_prealloc_memory_thread_lock), 0))
+        goto cancel_routine_4;
     if (__builtin_expect(pthread_create(&ecopeak_prealloc_memory_thread_id, &ecopeak_prealloc_memory_thread_attr, ecopeak_prealloc_memory_thread, NULL), 0)) {
         ecopeak_cleanup_memory();
         return 1;
     }
     return 0;
 
+    cancel_routine_4:
+    ecopeak_destroy_mutex(&ecopeak_prealloc_memory_thread_lock);
     cancel_routine_3:
     ecopeak_destroy_semaphore(&ecopeak_prealloc_memory_thread_continued);
     cancel_routine_2:
@@ -97,10 +101,10 @@ void* ecopeak_access_memory(uint32_t addr) {
     if (ecopeak_memory[block] == NULL) {
         if (__builtin_expect(ecopeak_wait_semaphore(&ecopeak_prealloc_memory_thread_continued), 0))
             return NULL;
-        if (__builtin_expect(pthread_mutex_lock(&ecopeak_prealloc_memory_thread_lock), 0))
+        if (__builtin_expect(ecopeak_lock_mutex(&ecopeak_prealloc_memory_thread_lock), 0))
             return NULL;
         ecopeak_memory[block] = ecopeak_prealloc_memory_block;
-        if (__builtin_expect(pthread_mutex_unlock(&ecopeak_prealloc_memory_thread_lock), 0))
+        if (__builtin_expect(ecopeak_unlock_mutex(&ecopeak_prealloc_memory_thread_lock), 0))
             return NULL;
         if (__builtin_expect(ecopeak_post_semaphore(&ecopeak_prealloc_memory_thread_continue), 0))
             return NULL;
@@ -111,12 +115,12 @@ void* ecopeak_access_memory(uint32_t addr) {
 
 void ecopeak_cleanup_memory() {
     ecopeak_wait_semaphore(&ecopeak_prealloc_memory_thread_continued); 
-    pthread_mutex_lock(&ecopeak_prealloc_memory_thread_lock);
+    ecopeak_lock_mutex(&ecopeak_prealloc_memory_thread_lock);
     ecopeak_prealloc_memory_thread_break = true;
-    pthread_mutex_unlock(&ecopeak_prealloc_memory_thread_lock);
+    ecopeak_unlock_mutex(&ecopeak_prealloc_memory_thread_lock);
     ecopeak_post_semaphore(&ecopeak_prealloc_memory_thread_continue);
     pthread_join(ecopeak_prealloc_memory_thread_id, NULL);
-    pthread_mutex_destroy(&ecopeak_prealloc_memory_thread_lock);
+    ecopeak_destroy_mutex(&ecopeak_prealloc_memory_thread_lock);
     ecopeak_destroy_semaphore(&ecopeak_prealloc_memory_thread_continued);
     ecopeak_destroy_semaphore(&ecopeak_prealloc_memory_thread_continue);
     pthread_attr_destroy(&ecopeak_prealloc_memory_thread_attr);
